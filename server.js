@@ -12,6 +12,13 @@ const cred = {
     rejectUnauthorized: false
 };
 const sServer = https.createServer(cred, app).listen(2400);
+
+app.set("view engine",'ejs');
+app.use("/assets",express.static(__dirname+"/public"));
+app.get('/',(req,res)=>{
+	res.render("index");
+});
+
 const webSS = new WebSocketServer({ server: sServer });
 
 const user = {}; // using hash-map to store users info
