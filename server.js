@@ -19,7 +19,7 @@ app.get('/',(req,res)=>{
 	res.render("index");
 });
 
-const webSS = new WebSocketServer({ server: sServer });
+const webSS = new WebSocketServer({ server: sServer});
 
 const user = {}; // using hash-map to store users info
 webSS.on('connection', conn => {
@@ -38,7 +38,7 @@ webSS.on('connection', conn => {
         switch (client.type) {
             case "login":
                 if (user[client.name]) {
-                    console.log("User logged in:" + client.name);
+                    console.log("User logged in: " + client.name);
                     sendMsgTo(conn, {
                         type: "login",
                         success: true
@@ -46,7 +46,7 @@ webSS.on('connection', conn => {
                 } else {
                     user[client.name] = conn;
                     conn.name = client.name;
-                    console.log("new user" + client.name);
+                    console.log("new user " + client.name);
                     sendMsgTo(conn, { type: "login", success: false });
                 }
                 break;
