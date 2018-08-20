@@ -6,10 +6,12 @@ const WebSocketServer = require('ws').Server;
 
 
 const cred = {
-    key: fs.readFileSync('server.key'),
-    cert: fs.readFileSync('server.crt'),
-    requestCert: false,
-    rejectUnauthorized: false
+    key: fs.readFileSync('serverkey.pem'),
+    cert: fs.readFileSync('server.pem'),
+    passphrase:'545723',
+    requestCert:false,
+    rejectUnauthorized:false,
+    ca:[fs.readFileSync('cacert.pem')]
 };
 const sServer = https.createServer(cred, app).listen(2400);
 

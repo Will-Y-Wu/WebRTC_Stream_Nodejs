@@ -1,14 +1,26 @@
 const conn = new WebSocket("wss://projectwoo.hopto.org:2400");
 let conn_partner, myname;
 const click_call = document.querySelector("#call");
-const videos = document.querySelector(".video_container");
-const self_video = document.querySelector("#self_video");
-const partner_video = document.querySelector("#partner_video");
+const v_container = document.querySelector(".video_container");
+const self_canvas = document.querySelector("#self_video");
+const s_ctx=self_canvas.getContext('2d');
+const partner_canvas = document.querySelector("#partner_video");
+const p_ctx=partner_canvas.getContext('2d');
 let input_username = document.querySelector("#username");
 const click_username = document.querySelector("#button_username");
 let input_Pname = document.querySelector("#partner_name");
 const click_hangup = document.querySelector("#hangup");
+click_hangup.addEventListener('click',onHangup);
 let myStream;
+let this_video=document.createElement('video');
+this_video.setAttribute('width','640');
+this_video.setAttribute('height','480');
+this_video.autoplay=true;
+let partner_video=document.createElement('video');
+partner_video.setAttribute('width','640');
+partner_video.setAttribute('height','480');
+partner_video.autoplay=true;
+const full_S_B=document.querySelector('#fullscreen');
 const RTCpeerconn = new RTCPeerConnection({
     iceServers: [{
 
@@ -16,8 +28,10 @@ const RTCpeerconn = new RTCPeerConnection({
     }]
 });
 //fullscren API
-videos.requestFullscreen = videos.webkitRequestFullscreen || videos.mozRequestFullscreen || videos.requestFullscreen;
-videos.addEventListener('dblclick', () => videos.requestFullscreen());
+v_container.requestFullscreen = v_container.webkitRequestFullscreen || v_container.mozRequestFullscreen || v_container.requestFullscreen;
+full_S_B.addEventListener('click',()=>v_container.requestFullscreen());
+v_container.addEventListener('dblclick', () => v_container.requestFullscreen());
+
 conn.onopen = () => {
     console.log("Websocket connected with Server")
 };
@@ -76,11 +90,19 @@ click_username.addEventListener('click', e => {
         aspectRatio: 1.7777777778
     }).then(stream => {
         myStream = stream;
-        self_video.srcObject = stream;
+        this_video.srcObject = stream;
+	tothisCanvas();
     }).catch(e => { console.log(e.message); });
 
 
 });
+
+function tothisCanvas(){
+	self_canvas.width=this_video.width;
+	self_canvas.height=this_video.height;
+	s_ctx.drawImage(this_video,0,0,this_video.width,this_video.height);
+	window.requestAnimationFrame(tothisCanvas);
+};
 
 click_call.addEventListener('click', e => {
     conn_partner = input_Pname.value;
@@ -159,4 +181,13 @@ RTCpeerconn.onicecandidate = event => {
 
 RTCpeerconn.ontrack = event => {
     partner_video.srcObject = event.streams[0];
+    toPCanvas();
 };
+
+function toPCanvas(){
+	partner_canvas.width=partner_video.width;
+	partner_canvas.height=partner_video.height;
+	p_ctx.drawImage(partner_video,0,0,partner_video.width,partner_video.height);
+	window.requestAnimationFrame(toPCanvas);
+};
+

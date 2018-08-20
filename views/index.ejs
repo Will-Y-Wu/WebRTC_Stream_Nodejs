@@ -31,15 +31,16 @@
 
 		<div class="video_container">
 			<div>
-			<video id="self_video" muted="muted" autoplay></video>
+			<canvas id="self_video" ></canvas>
 			</div>
 			<div>
-			<video id="partner_video" autoplay></video>
+			<canvas id="partner_video"></canvas>
 			</div>
 		</div>
 
 		<div>
 
+			<button id='fullscreen'>Full Screen</button>
 			<input type="text" id="partner_name"/>
 			<button id='call'>Make a call</button>
 			<button id='hangup'> Hang up the call</button>
